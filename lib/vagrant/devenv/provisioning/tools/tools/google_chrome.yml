@@ -1,0 +1,26 @@
+---
+- name: Download https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb to /tmp/google_chrome.deb
+  get_url:
+    url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    dest: /tmp/google_chrome.deb
+
+- name: "Install google-chrome dependencies via apt"
+  apt:
+    pkg:
+      - libappindicator3-1
+      - fonts-liberation 
+      - libdbusmenu-gtk3-4 
+      - libdbusmenu-glib4
+  become: true
+
+- name: "Install google-chrome via apt"
+  apt:
+    deb: /tmp/google_chrome.deb
+  become: true
+
+- name: Clean up
+  file:
+    path: '{{ item }}'
+    state: absent
+  loop:
+    - /tmp/google_chrome.deb

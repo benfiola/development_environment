@@ -1,0 +1,26 @@
+---
+- name: Download https://download.jetbrains.com/cpp/CLion-2019.3.2.tar.gz to /tmp/clion.tar.gz
+  get_url:
+    url: https://download.jetbrains.com/cpp/CLion-2019.3.2.tar.gz
+    dest: /tmp/clion.tar.gz
+
+- name: Create /opt/clion
+  file:
+    path: /opt/clion
+    mode: "a+rwx"
+    state: directory
+  become: true
+  
+- name: Extract /tmp/clion.tar.gz to /opt/clion
+  unarchive:
+    src: /tmp/clion.tar.gz
+    dest: /opt/clion
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+
+- name: Clean up
+  file:
+    path: '{{ item }}'
+    state: absent
+  loop:
+    - /tmp/clion.tar.gz

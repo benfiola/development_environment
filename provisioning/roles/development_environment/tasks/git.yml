@@ -1,9 +1,0 @@
----
-- name: Install git
-
-  block:
-    - name: Install packages via apt
-      apt: name={{item}} state=present
-      become: true
-      loop:
-        - git

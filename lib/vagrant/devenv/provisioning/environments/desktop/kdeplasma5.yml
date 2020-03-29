@@ -1,0 +1,6 @@
+---
+- name: "Install kdeplasma5 dependencies"
+  apt:
+    pkg:
+      - kde-plasma-desktop
+  become: true

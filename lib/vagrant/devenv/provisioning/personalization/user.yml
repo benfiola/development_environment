@@ -1,0 +1,24 @@
+---
+- name: 'Create wheel group'
+  group:
+    name: wheel
+    state: present
+  become: true
+
+- name: 'Grant wheel group passwordless sudo'
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+  become: true
+
+- name: 'Create user {{ username }}'
+  user:
+    name: '{{ username }}'
+    append: true
+    groups: wheel
+    state: present
+    createhome: true
+  become: true

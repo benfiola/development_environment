@@ -1,0 +1,10 @@
+---
+- name: "Install qemu via apt"
+  apt:
+    pkg:
+      - qemu-kvm 
+      - qemu 
+      - virt-manager 
+      - virt-viewer 
+      - libvirt-bin
+  become: true

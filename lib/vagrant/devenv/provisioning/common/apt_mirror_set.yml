@@ -1,0 +1,53 @@
+---
+- name: "Install python3-venv"
+  apt:
+    pkg:
+      - python3-venv
+  become: true
+
+- name: "Create apt-select venv at /tmp/apt-select-venv"
+  command: 
+    cmd: python3 -m venv /tmp/apt-select-venv
+  
+- name: "Install apt-select to /tmp/apt-select-venv"
+  command: 
+    cmd: /tmp/apt-select-venv/bin/pip install apt-select
+
+- name: "Back up /etc/apt/sources.list to /etc/apt/sources.list.backup"
+  copy: 
+    src: /etc/apt/sources.list
+    remote_src: true
+    dest: /etc/apt/sources.list.backup
+    group: root
+    owner: root
+    mode: '0644'
+    force: false
+  become: true
+
+- name: "Create new sources.list at /tmp"
+  command: 
+    cmd: /tmp/apt-select-venv/bin/apt-select
+    chdir: /tmp
+
+- name: "Overwrite /etc/apt/sources.list with /tmp/sources.list"
+  copy:
+    src: /tmp/sources.list
+    remote_src: true
+    dest: /etc/apt/sources.list
+    group: root
+    owner: root
+    mode: '0644'
+  become: true
+
+- name: "Update apt"
+  apt:
+    update_cache: true
+  become: true
+
+- name: Clean up
+  file:
+    path: '{{ item }}'
+    state: absent
+  loop:
+    - /tmp/apt-select-venv/
+    - /tmp/sources.list

@@ -1,0 +1,42 @@
+---
+  - import_tasks: 'tools/git.yml'
+
+  - name: Create /opt/nodenv
+    file:
+      path: /opt/nodenv
+      mode: "a+rwx"
+      state: directory
+    become: true
+
+  - name: "Cloning https://github.com/nodenv/nodenv.git to /opt/nodenv"
+    git:
+      repo: https://github.com/nodenv/nodenv.git
+      dest: /opt/nodenv
+  
+  - name: "Cloning https://github.com/nodenv/node-build to /opt/nodenv/plugins/nodenv-build"
+    git:
+      repo: https://github.com/nodenv/node-build
+      dest: /opt/nodenv/plugins/pyenv-virtualenv
+  
+  - name: Add nodenv initialiation to /etc/zsh/zshenv
+    blockinfile:
+      path: /etc/zsh/zshenv
+      backup: true
+      marker: "# {mark} nodenv initialization"
+      block: |
+        # if the ~/.nodenv directory doesn't exist, give the logged in user a copy of it.
+        if [ ! -d "$HOME/.nodenv" ]
+        then
+          cp -R "/opt/nodenv" "$HOME/.nodenv"
+        fi
+
+        # set env variables
+        export NODENV_ROOT="$HOME/.nodenv"
+        export PATH="$NODENV_ROOT/bin:$PATH"
+
+        # initialize nodenv
+        if command -v "nodenv" 1>/dev/null 2>&1
+        then 
+          eval "$(nodenv init -)"
+        fi
+    become: true 

@@ -1,0 +1,6 @@
+---
+- name: "Install budgie dependencies"
+  apt:
+    pkg:
+      - ubuntu-budgie-desktop
+  become: true

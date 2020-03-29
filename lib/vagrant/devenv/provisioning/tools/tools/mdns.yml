@@ -1,0 +1,12 @@
+---
+- name: "Install avahi-daemon via apt"
+  apt:
+    pkg:
+      - avahi-daemon
+  become: true
+
+- name: "Start avahi-daemon.service"
+  systemd:
+    name: "avahi-daemon"
+    state: started
+    enabled: yes

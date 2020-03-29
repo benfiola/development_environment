@@ -1,0 +1,6 @@
+---
+- name: "Install c++ support via apt"
+  apt:
+    pkg:
+      - g++
+  become: true

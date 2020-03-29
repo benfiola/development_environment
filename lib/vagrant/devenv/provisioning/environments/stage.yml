@@ -1,0 +1,13 @@
+---
+- hosts: all
+  gather_facts: true
+  
+  tasks:
+  - import_tasks: '../common/apt_mirror_set.yml'
+
+  - import_tasks: 'desktop/{{ desktop }}.yml'
+  - import_tasks: 'shell/{{ shell }}.yml'
+
+  - import_tasks: '../common/apt_mirror_unset.yml'
+
+    

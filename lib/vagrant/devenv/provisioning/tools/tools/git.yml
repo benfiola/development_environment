@@ -1,0 +1,6 @@
+---
+- name: "Install git via apt"
+  apt:
+    pkg:
+      - git
+  become: true

@@ -1,0 +1,13 @@
+---
+- name: Create /opt/unity
+  file:
+    path: /opt/unity
+    mode: "a+rwx"
+    state: directory
+  become: true
+
+- name: Download https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage to /opt/unity/UnityHub.AppImage
+  get_url:
+    url: https://public-cdn.cloud.unity3d.com/hub/prod/UnityHub.AppImage
+    dest: /opt/unity/UnityHub.AppImage
+    mode: "a+x"

@@ -1,0 +1,10 @@
+---
+- name: "Restore /etc/apt/sources.list.backup to /etc/apt/sources.list"
+  copy: 
+    src: /etc/apt/sources.list.backup
+    remote_src: true
+    dest: /etc/apt/sources.list
+    group: root
+    owner: root
+    mode: '0644'
+  become: true

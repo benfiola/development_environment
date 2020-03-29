@@ -1,5 +1,0 @@
----
-- hosts: development_environment
-  tasks:
-    - import_role:
-        name: development_environment

@@ -1,0 +1,6 @@
+---
+- name: "Install zsh"
+  apt:
+    pkg:
+      - zsh
+  become: true

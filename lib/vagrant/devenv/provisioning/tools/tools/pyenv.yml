@@ -1,0 +1,77 @@
+---
+  - import_tasks: 'tools/git.yml'
+
+  - name: "Install python build dependencies via apt"
+    apt:
+      pkg:
+        - make 
+        - build-essential 
+        - libssl-dev 
+        - zlib1g-dev 
+        - libbz2-dev 
+        - libreadline-dev 
+        - libsqlite3-dev 
+        - wget 
+        - curl 
+        - llvm 
+        - libncurses5-dev 
+        - xz-utils 
+        - tk-dev 
+        - libxml2-dev 
+        - libxmlsec1-dev 
+        - libffi-dev 
+        - liblzma-dev
+      install_recommends: false
+    become: true
+
+  - name: Create /opt/pyenv
+    file:
+      path: /opt/pyenv
+      mode: "a+rwx"
+      state: directory
+    become: true
+
+  - name: "Cloning https://github.com/pyenv/pyenv.git to /opt/pyenv"
+    git:
+      repo: https://github.com/pyenv/pyenv.git
+      dest: /opt/pyenv
+
+  - name: "Cloning https://github.com/pyenv/pyenv-virtualenv to /opt/pyenv/plugins/pyenv-virtualenv"
+    git:
+      repo: https://github.com/pyenv/pyenv-virtualenv
+      dest: /opt/pyenv/plugins/pyenv-virtualenv
+  
+  - name: Add pyenv initialiation to /etc/zsh/zshenv
+    blockinfile:
+      path: /etc/zsh/zshenv
+      backup: true
+      marker: "# {mark} pyenv initialization"
+      block: |
+        # if the ~/.pyenv directory doesn't exist, give the logged in user a copy of it.
+        if [ ! -d "$HOME/.pyenv" ]
+        then
+          cp -R "/opt/pyenv" "$HOME/.pyenv"
+        fi
+
+        # if the ~/.virtualenvs directory doesn't exist, create the proper symlink for it.
+        if [ ! -d "$HOME/.virtualenvs" ]
+        then
+          ln -s "$HOME/.pyenv/versions" "$HOME/.virtualenvs"
+        fi
+
+        # set env variables
+        export PYENV_ROOT="$HOME/.pyenv"
+        export PATH="$PYENV_ROOT/bin:$PATH"
+
+        # initialize pyenv
+        if command -v "pyenv" 1>/dev/null 2>&1
+        then 
+          eval "$(pyenv init -)"
+        fi
+
+        # initialize pyenv-virtualenv
+        if command -v "pyenv virtualenv" 1>/dev/null 2>&1
+        then 
+          eval "$(pyenv virtualenv-init -)"
+        fi
+    become: true

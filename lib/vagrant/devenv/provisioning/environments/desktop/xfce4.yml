@@ -1,0 +1,15 @@
+---
+- name: "Install xfce4 dependencies"
+  apt:
+    pkg:
+      - xfce4 
+      - lightdm 
+      - lightdm-gtk-greeter
+  become: true
+
+- name: "Start lightdm.service"
+  systemd:
+    name: "lightdm"
+    state: started
+    enabled: yes
+  become: true

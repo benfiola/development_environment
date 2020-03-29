@@ -1,0 +1,35 @@
+---
+- hosts: all
+  gather_facts: true
+
+  tasks:
+  - import_tasks: '../common/apt_mirror_set.yml'
+
+  - import_tasks: 'tools/cplusplus.yml'
+    when: tool_cplusplus
+  - import_tasks: 'tools/clion.yml'
+    when: tool_clion
+  - import_tasks: 'tools/docker.yml'
+    when: tool_docker
+  - import_tasks: 'tools/git.yml'
+    when: tool_git
+  - import_tasks: 'tools/google_chrome.yml'
+    when: tool_google_chrome
+  - import_tasks: 'tools/kubernetes.yml'
+    when: tool_kubernetes
+  - import_tasks: 'tools/mdns.yml'
+    when: tool_mdns
+  - import_tasks: 'tools/nodenv.yml'
+    when: tool_nodenv
+  - import_tasks: 'tools/pycharm.yml'
+    when: tool_pycharm
+  - import_tasks: 'tools/pyenv.yml'
+    when: tool_pyenv
+  - import_tasks: 'tools/qemu.yml'
+    when: tool_qemu
+  - import_tasks: 'tools/spotify.yml'
+    when: tool_spotify
+  - import_tasks: 'tools/unity.yml'
+    when: tool_unity
+
+  - import_tasks: '../common/apt_mirror_unset.yml'

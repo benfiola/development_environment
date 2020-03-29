@@ -1,0 +1,26 @@
+---
+- name: Download https://download.jetbrains.com/python/pycharm-professional-2019.3.1.tar.gz to /tmp/pycharm.tar.gz
+  get_url:
+    url: https://download.jetbrains.com/python/pycharm-professional-2019.3.1.tar.gz
+    dest: /tmp/pycharm.tar.gz
+
+- name: Create /opt/pycharm
+  file:
+    path: /opt/pycharm
+    mode: "a+rwx"
+    state: directory
+  become: true
+  
+- name: Extract /tmp/pycharm.tar.gz to /opt/pycharm
+  unarchive:
+    src: /tmp/pycharm.tar.gz
+    dest: /opt/pycharm
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+
+- name: Clean up
+  file:
+    path: '{{ item }}'
+    state: absent
+  loop:
+    - /tmp/pycharm.tar.gz
